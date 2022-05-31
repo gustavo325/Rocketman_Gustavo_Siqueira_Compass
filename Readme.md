@@ -30,7 +30,7 @@ ________
 
 
 
-### Autor :person_with_blond_hair:
+### Autor :man:
 
 
 
