@@ -1,4 +1,4 @@
-### JavaScript <img src="https://media4.giphy.com/media/ln7z2eWriiQAllfVcn/giphy.gif?cid=ecf05e47q6j6a2cl66kxask4f6u7pfdr5g3af49nnmqpprol&rid=giphy.gif&ct=s" alt="React Js Sticker by EscuelaDevRock" style="zoom:15%;" />
+### JavaScript :computer:
 
 ##### Operadores:  
 
@@ -20,7 +20,10 @@
 - Operadores ternários; 
 
   - Exemplo: Tem um cliente, caso ele possua 100 pontos será premium se não, será comum; 
-    - ![image-20220601204147430](C:\Users\gusta\AppData\Roaming\Typora\typora-user-images\image-20220601204147430.png)
+    - let pontos = 200; 
+    
+      let tipo = pontos > 100 ? 'premium' : 'comum';
+    
     - Nesse caso, o valor retornado será premium, pois o cliente possui 200 pontos;
 
 - Operadores lógicos; 
