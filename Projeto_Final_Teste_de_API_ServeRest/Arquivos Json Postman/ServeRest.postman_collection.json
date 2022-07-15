@@ -1,0 +1,2873 @@
+{
+	"info": {
+		"_postman_id": "ecc0d007-b342-4b6f-b9c9-3764d12dddac",
+		"name": "ServeRest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20820923"
+	},
+	"item": [
+		{
+			"name": "Positivo",
+			"item": [
+				{
+					"name": "Usuário ADM",
+					"item": [
+						{
+							"name": "Cadastrar usuário",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response.json();\r",
+											"const atributos = ['_id', 'message'];\r",
+											"const requisicao = JSON.parse(pm.request.body.raw); \r",
+											"\r",
+											"pm.environment.set(\"ID_adm\", response._id);\r",
+											"pm.environment.set('nomeUsuario', pm.variables.replaceIn(requisicao.nome));\r",
+											"\r",
+											"pm.test(\"Status code está correto, 201\", () => {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de sucesso do cadastro\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"for(i = 0; i<atributos.length; i++){\r",
+											"    pm.test(\"Contém atributo: \" + atributos[i], () => {\r",
+											"        pm.expect(response[atributos[i]].to.exist)\r",
+											"    })\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set('usuario', pm.variables.replaceIn('{{$randomEmail}}')); \r",
+											"pm.environment.set('senha', pm.variables.replaceIn('{{$randomPassword}}'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "usuario",
+										"value": "{{$randomEmail}}",
+										"type": "text"
+									},
+									{
+										"key": "senha",
+										"value": "{{$randomPassword}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"João sem pé de Feijão\",\r\n  \"email\": \"{{usuario}}\",\r\n  \"password\": \"{{senha}}\",\r\n  \"administrador\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{link}}/usuarios",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"usuarios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response.json(); \r",
+											"const atributos = ['message','authorization'];\r",
+											"\r",
+											"pm.environment.set(\"token\", response.authorization.slice(7));\r",
+											"\r",
+											"pm.test(\"Status code está correto, 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"for(i = 0; i<atributos.length; i++){\r",
+											"    pm.test(\"Contém atributo: \" + atributos[i], () => {\r",
+											"        pm.expect(response[atributos[i]].to.exist)\r",
+											"    })\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de sucesso do Login\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Login realizado com sucesso\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"{{usuario}}\",\r\n  \"password\": \"{{senha}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{link}}/login",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cadastrar produto 🔒",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response.json();\r",
+											"const atributos = ['_id', 'message'];\r",
+											"const requisicao = JSON.parse(pm.request.body.raw); \r",
+											"\r",
+											"pm.environment.set(\"IDProd\", response._id);\r",
+											"pm.environment.set('QtdeProd', requisicao.quantidade);\r",
+											"\r",
+											"for(i = 0; i<atributos.length; i++){\r",
+											"    pm.test(\"Contém atributo: \" + atributos[i], () => {\r",
+											"        pm.expect(response[atributos[i]].to.exist)\r",
+											"    })\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de sucesso do cadastro\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code está correto, 201\", () => {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set('nome', pm.variables.replaceIn('{{$randomCity}}'));\r",
+											"pm.environment.set('preco', pm.variables.replaceIn('{{$randomInt}}')); \r",
+											"pm.environment.set('descricao', pm.variables.replaceIn('{{$randomCreditCardMask}}')); "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{nome}}\",\r\n  \"preco\": {{preco}},\r\n  \"descricao\": \"{{descricao}}\",\r\n  \"quantidade\": 300\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{link}}/produtos",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"produtos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Editar produto {_id} 🔒",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const url = pm.environment.get('link');\r",
+											"const resp = pm.response.json();\r",
+											"const id = pm.environment.get(\"IDProd\");\r",
+											"const requisicao = JSON.parse(pm.request.body.raw); \r",
+											"const campo = ['nome', 'preco', 'descricao', 'quantidade'];\r",
+											"const valores = [pm.environment.get(\"nome\"), pm.environment.get(\"preco\"), pm.environment.get(\"descricao\"), pm.environment.get(\"QtdeProd\")];\r",
+											"const valoresAlterados = [requisicao.nome, requisicao.preco, requisicao.descricao, requisicao.quantidade];\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de sucesso da alteração\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Registro alterado com sucesso\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code está correto, 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"for(i = 0; i<valores.length; i++){\r",
+											"            pm.test(campo[i] + \" foi alterado\", () => {\r",
+											"                if(valores[i] != valoresAlterados[i]){\r",
+											"                    console.log(valores[i])\r",
+											"                    console.log(valoresAlterados[i])\r",
+											"                    var teste = \"ok\"\r",
+											"                }else {\r",
+											"                    teste = 'falso'\r",
+											"                } pm.expect(teste).to.eql('ok');\r",
+											"                })\r",
+											"                }\r",
+											"\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set('preco_editado', pm.variables.replaceIn('{{$randomInt}}')); \r",
+											"pm.environment.set('nome_editado', pm.variables.replaceIn('{{$randomPassword}}'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"{{nome_editado}}\",\r\n    \"preco\": {{preco_editado}},\r\n    \"descricao\": \"aleatório\",\r\n    \"quantidade\": 150\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{link}}/produtos/{{IDProd}}",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"produtos",
+										"{{IDProd}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar produtos cadastrados",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response.json();\r",
+											"var quantidade = response.quantidade;\r",
+											"var quantidade2 = 0;\r",
+											"\r",
+											"pm.test(\"Status code está correto, 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Quantidade de produtos está ok', () => {\r",
+											"    for(chave in response.produtos){\r",
+											"        quantidade2 += 1\r",
+											"    }\r",
+											"    pm.expect(quantidade).to.eql(quantidade2)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{link}}/produtos",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"produtos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Excluir produto {_id} 🔒",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Contém a mensagem de exclusão de produto\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code está correto, 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{link}}/produtos/{{IDProd}}",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"produtos",
+										"{{IDProd}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Usuário Comum",
+					"item": [
+						{
+							"name": "Cadastrar carrinho 🔒",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response.json(); \r",
+											"const atributos = ['_id', 'message'];\r",
+											"\r",
+											"pm.environment.set(\"IDCar\", response._id);\r",
+											"\r",
+											"for(i = 0; i<atributos.length; i++){\r",
+											"    pm.test(\"Contém atributo: \" + atributos[i], () => {\r",
+											"        pm.expect(response[atributos[i]].to.exist)\r",
+											"    })\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de sucesso do cadastro\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code está correto, 201\", () => {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"const requisicao = JSON.parse(pm.request.body.raw); \r",
+											"pm.environment.set(\"quantidadeCarrinho\", requisicao.produtos[0].quantidade)"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const url = pm.environment.get('link');\r",
+											"const tok = 'Bearer ' + pm.environment.get('token');\r",
+											"const qtde = pm.environment.get('QtdeProd');\r",
+											"pm.environment.set('nome', pm.variables.replaceIn('{{$randomCity}}'));\r",
+											"const nome = pm.environment.get('nome');\r",
+											"const id = pm.environment.get('IDProd');\r",
+											"pm.environment.set('usuario', pm.variables.replaceIn('{{$randomEmail}}'));\r",
+											"pm.environment.set('senha', pm.variables.replaceIn('{{$randomPassword}}'));\r",
+											"\r",
+											"const user = pm.environment.get('usuario');\r",
+											"const pin = pm.environment.get('senha');\r",
+											"\r",
+											"const CadastroProduto = {\r",
+											"    url: `${url}/produtos`,\r",
+											"    method: 'POST',\r",
+											"    header: { 'Content-Type': 'application/json', 'Authorization': `${tok}` },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"nome\": `${nome}`,\r",
+											"            \"preco\": 500,\r",
+											"            \"descricao\": \"Não vender para o João...\",\r",
+											"            \"quantidade\": `${qtde}`\r",
+											"        })\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"const Login = {\r",
+											"    url: `${url}/login`,\r",
+											"    method: `POST`,\r",
+											"    header: { 'Content-Type': 'application/json' },\r",
+											"    body:\r",
+											"    {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"email\": `${user}`,\r",
+											"            \"password\": `${pin}`,\r",
+											"        })\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"const CadastroUsuario = {\r",
+											"    url: `${url}/usuarios`,\r",
+											"    method: 'POST',\r",
+											"    header: { 'Content-Type': 'application/json' },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\r",
+											"            \"nome\": \"João sem pé de Feijão\",\r",
+											"            \"email\": `${user}`,\r",
+											"            \"password\": `${pin}`,\r",
+											"            \"administrador\": \"false\"\r",
+											"        })\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.sendRequest(CadastroProduto, (err, response) => {\r",
+											"    console.log(err ? err : response.json());\r",
+											"    try {\r",
+											"        pm.environment.set('IDProd', response.json()._id);\r",
+											"        \r",
+											"        pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+											"            console.log(err ? err : response.json());\r",
+											"            try {\r",
+											"                pm.environment.set('ID_comum', response.json()._id);\r",
+											"\r",
+											"                pm.sendRequest(Login, (err, response) => {\r",
+											"                    console.log(err ? err : response.json());\r",
+											"                    try {\r",
+											"                        pm.environment.set('token', response.json().authorization.slice(7));\r",
+											"                    } catch{\r",
+											"                        console.log(\"Falhou\");\r",
+											"                    }\r",
+											"                });\r",
+											"            } catch{\r",
+											"                console.log(\"Falhou\");\r",
+											"            }\r",
+											"        });\r",
+											"    } catch{\r",
+											"        console.log('Falhou');\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{IDProd}}\",\r\n      \"quantidade\": 2\r\n    }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{link}}/carrinhos",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"carrinhos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Excluir carrinho e concluir compra 🔒",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const url = pm.environment.get('link');\r",
+											"const id = pm.environment.get('IDProd');\r",
+											"const qtde = pm.environment.get('quantidadeCarrinho')\r",
+											"var teste = '';\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de sucesso da conclusão de compra\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code está correto, 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var valor = pm.environment.get('QtdeProd');\r",
+											"\r",
+											"const BuscaPordId = {\r",
+											"    url: `${url}/produtos/${id}`,\r",
+											"    method: 'GET',\r",
+											"    header: {},\r",
+											"    body: {}\r",
+											"}\r",
+											"pm.sendRequest(BuscaPordId, (err, response) => {\r",
+											"    err ? err : response.json();\r",
+											"    try {\r",
+											"        pm.environment.set('QtdeProd2', response.json().quantidade);\r",
+											"        var valorMenor = pm.environment.get('QtdeProd2');\r",
+											"        pm.test(\"Quantidade de estoque está correta\", () => {\r",
+											"            if ((valor -= qtde) == valorMenor) {\r",
+											"                teste = 'ok'\r",
+											"            } else {\r",
+											"                teste = 'false'\r",
+											"            }\r",
+											"            pm.expect(teste).to.eql('ok')\r",
+											"        });\r",
+											"    } catch{\r",
+											"        console.log(\"Falhou\");\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{link}}/carrinhos/concluir-compra",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"carrinhos",
+										"concluir-compra"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Excluir carrinho e devolver estoque 🔒",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response.json();\r",
+											"const url = pm.environment.get('link');\r",
+											"const id = pm.environment.get('IDProd');\r",
+											"var teste = '';\r",
+											"\r",
+											"pm.test(\"Contém a mensagem de devolução ao estoque\", () => {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso. Estoque dos produtos reabastecido\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code está correto, 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const BuscaPordId = {\r",
+											"    url: `${url}/produtos/${id}`,\r",
+											"    method: 'GET',\r",
+											"    header: {},\r",
+											"    body: {}\r",
+											"}\r",
+											"pm.sendRequest(BuscaPordId, (err, response) => {\r",
+											"    err ? err : response.json();\r",
+											"    try {\r",
+											"        pm.environment.set('QtdeProd', response.json().quantidade);\r",
+											"\r",
+											"        var valor = pm.environment.get('QtdeProd');\r",
+											"        var valor2 = pm.environment.get('QtdeProd2');\r",
+											"\r",
+											"        pm.test(\"Quantidade de estoque está correta\", () => {\r",
+											"            if (valor == valor2) {\r",
+											"                teste = \"ok\";\r",
+											"            } else {\r",
+											"                teste = \"errado\";\r",
+											"            }\r",
+											"            pm.expect(teste).to.eql('ok');\r",
+											"        });\r",
+											"    } catch{\r",
+											"        console.log(\"Falhou\");\r",
+											"    }\r",
+											"}); "
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const url = pm.environment.get('link');\r",
+											"const id = pm.environment.get('IDProd');\r",
+											"const tok = 'Bearer ' + pm.environment.get('token');\r",
+											"\r",
+											"const CadastroCarrinho = {\r",
+											"    url: `${url}/carrinhos`,\r",
+											"    method: 'POST', \r",
+											"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+											"    body: {\r",
+											"        mode: 'raw', \r",
+											"        raw: JSON.stringify({\r",
+											"              \"produtos\": [\r",
+											"                  {\r",
+											"                      \"idProduto\": `${id}`,\r",
+											"                      \"quantidade\": 5}]\r",
+											"        })\r",
+											"    }\r",
+											"}\r",
+											"pm.sendRequest(CadastroCarrinho, (err, response) => {\r",
+											"       console.log(err ? err : response.json());\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{link}}/carrinhos/cancelar-compra",
+									"host": [
+										"{{link}}"
+									],
+									"path": [
+										"carrinhos",
+										"cancelar-compra"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Editar usuário",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set('usuario', pm.variables.replaceIn('{{$randomEmail}}')); \r",
+									"pm.environment.set('senha', pm.variables.replaceIn('{{$randomPassword}}'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code está correto, 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Contém a mensagem de alteração\", () => {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Registro alterado com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"João com o pé de Feijão\",\r\n  \"email\": \"{{usuario}}\",\r\n  \"password\": \"{{senha}}\",\r\n  \"administrador\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{link}}/usuarios/{{ID_adm}}",
+							"host": [
+								"{{link}}"
+							],
+							"path": [
+								"usuarios",
+								"{{ID_adm}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar usuários cadastrados",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"var quantidade = response.quantidade;\r",
+									"var quantidade2 = 0;\r",
+									"var idadm = pm.environment.get('ID_adm');\r",
+									"var idcom = pm.environment.get('ID_comum');\r",
+									"\r",
+									"pm.test(\"Status code está correto, 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Quantidade de produtos está ok', () => {\r",
+									"    for(chave in response.usuarios){\r",
+									"        quantidade2 += 1\r",
+									"    }\r",
+									"    pm.expect(quantidade).to.eql(quantidade2)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{link}}/usuarios",
+							"host": [
+								"{{link}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir usuário {_ID}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code está correto, 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Contém a mensagem de sucesso do Login\", () => {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{link}}/usuarios/{{ID_adm}}",
+							"host": [
+								"{{link}}"
+							],
+							"path": [
+								"usuarios",
+								"{{ID_adm}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negativo",
+			"item": [
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "Usuário",
+							"item": [
+								{
+									"name": "⭐Cadastrar usuário com e-mail inválido",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de email inválido\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"email deve ser um email válido\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"Gustavo Henrique\",\r\n  \"email\": \"123456789\",\r\n  \"password\": \"{{senha}}\",\r\n  \"administrador\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/usuarios",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cadastrar usuário sem informar senha",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de campo senha em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"password não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"Gustavo Henrique\",\r\n  \"email\": \"{{usuario}}\",\r\n  \"password\": \"\",\r\n  \"administrador\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/usuarios",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cadastrar usuário (e-mail e senha em branco)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de campo senha em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"password não pode ficar em branco\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de campo email em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"email não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"Gustavo Henrique\",\r\n  \"email\": \"\",\r\n  \"password\": \"\",\r\n  \"administrador\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/usuarios",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Login",
+							"item": [
+								{
+									"name": "Login com usuário inválido",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de email inválido\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"email deve ser um email válido\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"joao sem pe de feijao\",\r\n  \"password\": \"acabou o feijao\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/login",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Login sem usuário e senha",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de email em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"email não pode ficar em branco\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de senha em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"password não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"\",\r\n  \"password\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/login",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Login sem senha",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de senha em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"password não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"{{usuario}}\",\r\n  \"password\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/login",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"login"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Produto",
+							"item": [
+								{
+									"name": "⭐ Cadastrar produto 🔒 preço negativo",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `joao@semfeijao.com`,\r",
+													"                  \"password\": `feijao`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `joao@semfeijao.com`,\r",
+													"                  \"password\": `feijao`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de preço incorreto\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"preco deve ser um número positivo\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"Iphone 13\",\r\n  \"preco\": -500,\r\n  \"descricao\": \"Smartphone\",\r\n  \"quantidade\": 500\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cadastrar produto 🔒 quantidade negativa",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de quantidade incorreta\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"quantidade deve ser maior ou igual a 0\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario');\r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url: `${url}/login`,\r",
+													"    method: `POST`,\r",
+													"    header: { 'Content-Type': 'application/json' },\r",
+													"    body:\r",
+													"    {\r",
+													"        mode: 'raw',\r",
+													"        raw: JSON.stringify({\r",
+													"            \"email\": `joao2@semfeijao.com`,\r",
+													"            \"password\": `feijao`,\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST',\r",
+													"    header: { 'Content-Type': 'application/json' },\r",
+													"    body: {\r",
+													"        mode: 'raw',\r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"João sem pé de Feijão2\",\r",
+													"            \"email\": `joao2@semfeijao.com`,\r",
+													"            \"password\": `feijao`,\r",
+													"            \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"    console.log(err ? err : response.json());\r",
+													"    try {\r",
+													"        pm.environment.set('ID_adm', response.json()._id);\r",
+													"        pm.sendRequest(Login, (err, response) => {\r",
+													"            console.log(err ? err : response.json());\r",
+													"            try {\r",
+													"                pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"            }\r",
+													"        });\r",
+													"\r",
+													"    } catch{\r",
+													"        console.log(\"Falhou\");\r",
+													"    }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"Iphone 13\",\r\n  \"preco\": 5600,\r\n  \"descricao\": \"Smartphone\",\r\n  \"quantidade\": -20\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "⭐ Cadastrar produto 🔒 usuário sem autorização",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 403\", () => {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de quantidade incorreta\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"Rota exclusiva para administradores\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": \"joaos02@feijao.com\",\r",
+													"                  \"password\": \"feijao\",\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão3\",\r",
+													"                  \"email\": \"joaos02@feijao.com\",\r",
+													"                  \"password\": \"feijao\",\r",
+													"                  \"administrador\": \"false\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"Iphone 13 mini\",\r\n  \"preco\": 5600,\r\n  \"descricao\": \"Smartphone\",\r\n  \"quantidade\": 50\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Carrinho",
+							"item": [
+								{
+									"name": "Cadastrar um carrinho 🔒 id de produto inválido",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de quantidade incorreta\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"Produto não encontrado\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.environment.set('usuario', pm.variables.replaceIn('{{$randomEmail}}')); \r",
+													"pm.environment.set('senha', pm.variables.replaceIn('{{$randomPassword}}'));\r",
+													"\r",
+													"\r",
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão4\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{$randomUUID}}\",\r\n      \"quantidade\": 2\r\n    },\r\n    {\r\n      \"idProduto\": \"{{$randomUUID}}\",\r\n      \"quantidade\": 2\r\n    }\r\n  ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/carrinhos",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"carrinhos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "⭐ Cadastrar um carrinho 🔒 QTDE de produto insuficiente no estoque",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.variables.replaceIn('{{$randomEmail}}');\r",
+													"const password = pm.variables.replaceIn('{{$randomPassword}}');\r",
+													"\r",
+													"const Login = {\r",
+													"    url: `${url}/login`,\r",
+													"    method: `POST`,\r",
+													"    header: { 'Content-Type': 'application/json' },\r",
+													"    body:\r",
+													"    {\r",
+													"        mode: 'raw',\r",
+													"        raw: JSON.stringify({\r",
+													"            \"email\": `${email}`,\r",
+													"            \"password\": `${password}`,\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST',\r",
+													"    header: { 'Content-Type': 'application/json' },\r",
+													"    body: {\r",
+													"        mode: 'raw',\r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"João sem pé de alface\",\r",
+													"            \"email\": `${email}`,\r",
+													"            \"password\": `${password}`,\r",
+													"            \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"};\r",
+													"\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"    console.log(err ? err : response.json());\r",
+													"    try {\r",
+													"        pm.environment.set('ID_adm', response.json()._id);\r",
+													"        pm.sendRequest(Login, (err, response) => {\r",
+													"            console.log(err ? err : response.json());\r",
+													"            try {\r",
+													"                pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            }\r",
+													"            catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"            }\r",
+													"        });\r",
+													"    } catch{\r",
+													"        console.log(\"Falhou\");\r",
+													"    }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de quantidade incorreta\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"Produto não possui quantidade suficiente\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{IDProd}}\",\r\n      \"quantidade\": 20000\r\n    }\r\n  ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/carrinhos",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"carrinhos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cadastrar mais de um carrinho 🔒",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const id = pm.environment.get('IDProd');\r",
+													"const tok = 'Bearer ' + pm.environment.get('token');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"const CadastrarCarrinho = {\r",
+													"    url: `${url}/carrinhos`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"              \"produtos\": [{\r",
+													"                  \"idProduto\": `${id}`,\r",
+													"                  \"quantidade\": 2}]\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastrarCarrinho, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('IDCar', response.json()._id);\r",
+													"        } catch{\r",
+													"            console.log('Falhou');\r",
+													"        }\r",
+													"});\r",
+													"\r",
+													"const CadastroProduto = {\r",
+													"    url: `${url}/produtos`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": `${password}` ,\r",
+													"            \"preco\": 500,\r",
+													"            \"descricao\": \"Não vender para o João...\",\r",
+													"            \"quantidade\": 5\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroProduto, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('IDProd', response.json()._id);\r",
+													"        } catch{\r",
+													"            console.log('Falhou');\r",
+													"        }\r",
+													"});\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `joao77@semfeijao.com`,\r",
+													"                  \"password\": `feijao`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão 7123\",\r",
+													"                  \"email\": `joao77@semfeijao.com`,\r",
+													"                  \"password\": `feijao`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de quantidade incorreta\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"Não é permitido ter mais de 1 carrinho\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{IDProd}}\",\r\n      \"quantidade\": 2\r\n    }\r\n  ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/carrinhos",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"carrinhos"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "PUT",
+					"item": [
+						{
+							"name": "Usuário",
+							"item": [
+								{
+									"name": "Editar usuário {_id} com e-mail inválido",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de e-mail inválido\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"email deve ser um email válido\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"teste\",\r\n  \"email\": \"111000111203041234567\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"administrador\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/usuarios/{{ID}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"usuarios",
+												"{{ID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Editar usuário {_id} sem informar senha",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de senha em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"password não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"teste\",\r\n  \"email\": \"{{usuario}}\",\r\n  \"password\": \"\",\r\n  \"administrador\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/usuarios/{{ID}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"usuarios",
+												"{{ID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Editar usuário {_id} (e-mail e senha em branco)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de e-mail em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"email não pode ficar em branco\");\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de senha em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"password não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"nome\": \"teste\",\r\n  \"email\": \"\",\r\n  \"password\": \"\",\r\n  \"administrador\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/usuarios/{{ID}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"usuarios",
+												"{{ID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Produto",
+							"item": [
+								{
+									"name": "Editar produto {_id} 🔒 quantidade negativa",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de quantidade incorreta\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"quantidade deve ser maior ou igual a 0\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const id = pm.environment.get('IDProd');\r",
+													"const tok = 'Bearer ' + pm.environment.get('token');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"const CadastroProduto = {\r",
+													"    url: `${url}/produtos`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"Pé de feijão\",\r",
+													"            \"preco\": 500,\r",
+													"            \"descricao\": \"Não vender para o João...\",\r",
+													"            \"quantidade\": 5\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroProduto, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('IDProd', response.json()._id);\r",
+													"        } catch{\r",
+													"            console.log('Falhou');\r",
+													"        }\r",
+													"});\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"nome\": \"mochila a jato\",\r\n    \"preco\": 2000,\r\n    \"descricao\": \"tecnologia\",\r\n    \"quantidade\": -450\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos/{{IDProd}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos",
+												"{{IDProd}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Editar produto {_id} 🔒 ID inexistente",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 201\", () => {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de cadastro\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const id = pm.environment.get('IDProd');\r",
+													"const tok = 'Bearer ' + pm.environment.get('token');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"const CadastroProduto = {\r",
+													"    url: `${url}/produtos`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"Pé de feijão\",\r",
+													"            \"preco\": 500,\r",
+													"            \"descricao\": \"Não vender para o João...\",\r",
+													"            \"quantidade\": 5\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroProduto, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('IDProd', response.json()._id);\r",
+													"        } catch{\r",
+													"            console.log('Falhou');\r",
+													"        }\r",
+													"});\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"nome\": \"{{nome_editado}}\",\r\n    \"preco\": {{preco_editado}},\r\n    \"descricao\": \"tecnologia\",\r\n    \"quantidade\": 150\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos/{{$randomPhoneNumber}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos",
+												"{{$randomPhoneNumber}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Editar produto {_id} 🔒 preço negativo",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const id = pm.environment.get('IDProd');\r",
+													"const tok = 'Bearer ' + pm.environment.get('token');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"const CadastroProduto = {\r",
+													"    url: `${url}/produtos`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"Pé de feijão\",\r",
+													"            \"preco\": 500,\r",
+													"            \"descricao\": \"Não vender para o João...\",\r",
+													"            \"quantidade\": 5\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroProduto, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('IDProd', response.json()._id);\r",
+													"        } catch{\r",
+													"            console.log('Falhou');\r",
+													"        }\r",
+													"});\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de preço negativo\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"preco deve ser um número positivo\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"nome\": \"Iphone 13\",\r\n    \"preco\": -55,\r\n    \"descricao\": \"Smartphone\",\r\n    \"quantidade\": 150\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos/{{IDProd}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos",
+												"{{IDProd}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Editar produto {_id} 🔒 sem nome",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const id = pm.environment.get('IDProd');\r",
+													"const tok = 'Bearer ' + pm.environment.get('token');\r",
+													"const email = pm.environment.get('usuario'); \r",
+													"const password = pm.environment.get('senha');\r",
+													"\r",
+													"const CadastroProduto = {\r",
+													"    url: `${url}/produtos`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json', 'Authorization': `${tok}`}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"Pé de feijão\",\r",
+													"            \"preco\": 500,\r",
+													"            \"descricao\": \"Não vender para o João...\",\r",
+													"            \"quantidade\": 5\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroProduto, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('IDProd', response.json()._id);\r",
+													"        } catch{\r",
+													"            console.log('Falhou');\r",
+													"        }\r",
+													"});\r",
+													"\r",
+													"const Login = {\r",
+													"    url:`${url}/login`, \r",
+													"    method: `POST`, \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body:\r",
+													"    {mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"        })\r",
+													"    }}\r",
+													"    pm.sendRequest(Login, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST', \r",
+													"    header: {'Content-Type': 'application/json'}, \r",
+													"    body: {\r",
+													"        mode: 'raw', \r",
+													"        raw: JSON.stringify({\r",
+													"                  \"nome\": \"João sem pé de Feijão\",\r",
+													"                  \"email\": `${email}`,\r",
+													"                  \"password\": `${password}`,\r",
+													"                  \"administrador\": \"true\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"        console.log(err ? err : response.json());\r",
+													"        try{\r",
+													"            pm.environment.set('ID_adm', response.json()._id);\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"                }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 400\", ()=>  {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de nome em branco\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"nome não pode ficar em branco\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"nome\": \"\",\r\n    \"preco\": 2000,\r\n    \"descricao\": \"Smartphone\",\r\n    \"quantidade\": 150\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{link}}/produtos/{{IDProd}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos",
+												"{{IDProd}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "DEL",
+					"item": [
+						{
+							"name": "Produto",
+							"item": [
+								{
+									"name": "⭐ Excluir produto {_id} 🔒 usuário sem autorização",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const url = pm.environment.get('link');\r",
+													"const id = pm.environment.get('IDProd');\r",
+													"const tok = 'Bearer ' + pm.environment.get('token');\r",
+													"pm.environment.set('usuario', pm.variables.replaceIn('{{$randomEmail}}'))\r",
+													"const email = pm.environment.get('usuario');\r",
+													"const password = pm.environment.get('senha');\r",
+													"const idUsuario = pm.environment.get('ID_adm');\r",
+													"pm.environment.set('nomeUsuario', pm.variables.replaceIn('{{$randomEmail}}'));\r",
+													"const aleatorio = pm.environment.get('nomeUsuario')\r",
+													"\r",
+													"const Login = {\r",
+													"    url: `${url}/login`,\r",
+													"    method: `POST`,\r",
+													"    header: { 'Content-Type': 'application/json' },\r",
+													"    body:\r",
+													"    {\r",
+													"        mode: 'raw',\r",
+													"        raw: JSON.stringify({\r",
+													"            \"email\": `${email}`,\r",
+													"            \"password\": `feijao`,\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"const CadastroUsuario = {\r",
+													"    url: `${url}/usuarios`,\r",
+													"    method: 'POST',\r",
+													"    header: { 'Content-Type': 'application/json' },\r",
+													"    body: {\r",
+													"        mode: 'raw',\r",
+													"        raw: JSON.stringify({\r",
+													"            \"nome\": \"João sem pé de Feijão\",\r",
+													"            \"email\": `${email}`,\r",
+													"            \"password\": `feijao`,\r",
+													"            \"administrador\": \"false\"\r",
+													"        })\r",
+													"    }\r",
+													"}\r",
+													"pm.sendRequest(CadastroUsuario, (err, response) => {\r",
+													"    console.log(err ? err : response.json());\r",
+													"    try {\r",
+													"        pm.environment.set('ID_adm', response.json()._id);\r",
+													"\r",
+													"        pm.sendRequest(Login, (err, response) => {\r",
+													"            console.log(err ? err : response.json());\r",
+													"            try {\r",
+													"                pm.environment.set('token', response.json().authorization.slice(7));\r",
+													"\r",
+													"            } catch{\r",
+													"                console.log(\"Falhou\");\r",
+													"            }\r",
+													"        })\r",
+													"    } catch{\r",
+													"        console.log(\"Falhou\");\r",
+													"    }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code está correto, 403\", () => {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Contém a mensagem de rota exlucisva para ADM's\", () => {\r",
+													"    pm.expect(pm.response.text()).to.include(\"Rota exclusiva para administradores\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{link}}/produtos/{{IDProd}}",
+											"host": [
+												"{{link}}"
+											],
+											"path": [
+												"produtos",
+												"{{IDProd}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

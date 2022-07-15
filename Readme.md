@@ -71,6 +71,10 @@ ________
 - **[gustavo325](https://github.com/gustavo325)/javascript-koans/koans/KoansRunner.html**
 
   Esse arquivo serve para visualização do progresso nos exercícios. 
+  
+- **[Rocketman_Gustavo_Siqueira_Compass](https://github.com/gustavo325/Rocketman_Gustavo_Siqueira_Compass/tree/develop)/Projeto_Final_Teste_de_API_ServeRest**
+
+  Essa pasta contém os arquivos referentes ao projeto final (Sprint 6) do programa de bolsas. O objetivo era montar uma estrutura de testes da API ServeRest no Postman, e automatizar os principais fluxos de teste. Para esse projeto, como se tratava de um programa de aprendizagem em automação de testes, foram automatizados um grande número de testes, mas sei que na rotina de trabalho não é dessa forma, tendo como objetivo ampliar ao máximo meus conhecimentos em automação de testes.
 
 ------
 
